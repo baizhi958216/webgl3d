@@ -10,6 +10,8 @@
   "dependencies": {
     "@varlet/ui": "^1.22.10",
     "core-js": "^3.6.5",
+    "font-awesome": "^4.7.0",
+    "three": "^0.134.0",
     "vue": "^3.0.0"
   },
   "devDependencies": {

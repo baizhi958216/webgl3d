@@ -8,11 +8,8 @@
         <!-- 导入模型 -->
         <ImportModel/>
 
-        <!-- 开关模型区域 -->
-        <var-switch v-model="value" @click="cardshow" disabled/>
-        
         <!-- 模型区 -->
-        <var-card class="card-1" title="球" subtitle="" description="" :src="require('../assets/2@3x.png')" fit="contain">
+        <var-card class="card-1" :src="require('../assets/2@3x.png')" fit="contain">
         <template #extra>
           <var-button type="success" @click="modeladd" style="margin-right: 10px">添加</var-button>
           <var-button type="danger" @click="modeldel">删除</var-button>
@@ -24,9 +21,7 @@
     </div>
     
     <div id="right">
-      <!-- <div id="rTop"> -->
         <var-image :radius="10" :src="require('../assets/1@3x.png')"/>
-      <!-- </div> -->
      
     </div>
 
@@ -36,7 +31,6 @@
 
 <script>
 import ImportModel from './ImportModel.vue'
-import { ref } from 'vue'
 import { Snackbar } from '@varlet/ui'
 
 export default {
@@ -45,8 +39,6 @@ export default {
     ImportModel
   },
   setup() {
-    const value = ref(true)
-    // const cardshow = () =>{}
     const modeladd = () => {
       Snackbar({
         content:'已加载',
@@ -62,10 +54,8 @@ export default {
       })
     }
     return {
-      // cardshow,
       modeladd,
-      modeldel,
-      value
+      modeldel
     }
   }
 }
@@ -83,14 +73,12 @@ export default {
   min-width: 136px;
   display: flex;
   align-items: center;
-  /* background-color: rgb(151, 93, 165); */
 }
 #lTop{
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
   align-items: center;
-  /* margin-top: 3vh; */
 }
 .card-1{
   margin-top: 30px;
@@ -104,11 +92,7 @@ export default {
   left: 25%;
   height: 100%;
   width: 75%;
-  /* background-color: green; */
 }
-/* #rTop{
-  margin-top: 3vh;
-} */
 #loading{
   color: #2979ff;
   position: absolute;
