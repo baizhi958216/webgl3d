@@ -11,10 +11,12 @@
     "@varlet/ui": "^1.22.10",
     "core-js": "^3.6.5",
     "font-awesome": "^4.7.0",
+    "stats.js": "^0.17.0",
     "three": "^0.134.0",
     "vue": "^3.0.0"
   },
   "devDependencies": {
+    "@types/stats.js": "^0.17.0",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
