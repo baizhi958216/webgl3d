@@ -69,7 +69,8 @@ export default {
       });
       renderer.setSize(cWidth, cHeight);
       // 创建一个大盒子cube
-      const geometry = new THREE.BoxGeometry(200, 200, 200);
+      const geometry = new THREE.BoxGeometry(500, 500, 500);
+      const littleGeometry = new THREE.IcosahedronGeometry(1, 1, 1);
       // 载入贴图
       const textureloader = new THREE.TextureLoader();
       const texture = textureloader.load(
@@ -80,8 +81,10 @@ export default {
         side: THREE.DoubleSide,
       });
       const cube = new THREE.Mesh(geometry, material);
+      const littlecube = new THREE.Mesh(littleGeometry, material);
       // 在场景加入创建的盒子cube
       scene.add(cube);
+      scene.add(littlecube);
       // FPS显示
       const stats = new Stats();
       stats.setMode(0);
@@ -93,9 +96,12 @@ export default {
       const animate = function () {
         stats.begin();
         requestAnimationFrame(animate);
-        cube.rotation.x += 0.001;
-        cube.rotation.y += 0.001;
-        cube.rotation.z += 0.001;
+        cube.rotation.x += 0.01;
+        cube.rotation.y += 0.01;
+        cube.rotation.z += 0.01;
+        littlecube.rotation.x += 0.01;
+        littlecube.rotation.y += 0.01;
+        littlecube.rotation.z += 0.01;
         renderer.render(scene, camera);
         stats.end();
       };
