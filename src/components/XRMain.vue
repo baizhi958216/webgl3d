@@ -8,26 +8,11 @@
         <ImportModel />
 
         <!-- 模型区 -->
-        <var-card
-          class="card-1"
-          :src="require('../assets/xier.jpeg')"
-          fit="contain"
-        >
-          <template #extra>
-            <var-button
-              type="success"
-              @click="modeladd"
-              style="margin-right: 10px"
-              >添加</var-button
-            >
-            <var-button type="danger" @click="modeldel">删除</var-button>
-          </template>
-        </var-card>
       </div>
     </div>
 
     <div id="right">
-      <div class="modelbox">
+      <div id="modelbox">
         <canvas id="three"></canvas>
       </div>
     </div>
@@ -36,7 +21,6 @@
 
 <script>
 import ImportModel from "./ImportModel.vue";
-import { Snackbar } from "@varlet/ui";
 import * as THREE from "three";
 import * as Stats from "stats.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -61,7 +45,7 @@ export default {
         0.1,
         1000
       );
-      camera.position.set(0, 0, 2);
+      camera.position.set(0, 0, 20);
       // 渲染器
       const renderer = new THREE.WebGLRenderer({
         canvas,
@@ -69,18 +53,26 @@ export default {
       });
       renderer.setSize(cWidth, cHeight);
       // 创建一个大盒子cube
-      const geometry = new THREE.BoxGeometry(500, 500, 500);
-      const littleGeometry = new THREE.IcosahedronGeometry(1, 1, 1);
+      const geometry = new THREE.BoxGeometry(800, 600, 800);
+      const littleGeometry = new THREE.IcosahedronGeometry(1, 60, 1);
       // 载入贴图
       const textureloader = new THREE.TextureLoader();
       const texture = textureloader.load(
-        "http://5b0988e595225.cdn.sohucs.com/images/20200302/dbee068ff2fa4df1b0314d3f8cc38a49.jpeg"
+        "https://uploadstatic.mihoyo.com/contentweb/20191114/2019111412090396621.png"
       );
       const material = new THREE.MeshBasicMaterial({
         map: texture,
         side: THREE.DoubleSide,
       });
-      const cube = new THREE.Mesh(geometry, material);
+      const textureloader2 = new THREE.TextureLoader();
+      const texture2 = textureloader2.load(
+        "https://uploadstatic.mihoyo.com/contentweb/20200410/2020041019014847737.png"
+      );
+      const material2 = new THREE.MeshBasicMaterial({
+        map: texture2,
+        side: THREE.DoubleSide,
+      });
+      const cube = new THREE.Mesh(geometry, material2);
       const littlecube = new THREE.Mesh(littleGeometry, material);
       // 在场景加入创建的盒子cube
       scene.add(cube);
@@ -88,20 +80,14 @@ export default {
       // FPS显示
       const stats = new Stats();
       stats.setMode(0);
-      stats.domElement.style.position = "fixed";
-      stats.domElement.style.left = "25%";
-      stats.domElement.style.top = "10%";
-      document.body.appendChild(stats.domElement);
+      stats.domElement.style.position = "absolute";
+      stats.domElement.style.opacity = "0.4";
+      document.getElementById("modelbox").appendChild(stats.domElement);
       // 渲染场景
       const animate = function () {
         stats.begin();
         requestAnimationFrame(animate);
-        cube.rotation.x += 0.01;
-        cube.rotation.y += 0.01;
-        cube.rotation.z += 0.01;
-        littlecube.rotation.x += 0.01;
-        littlecube.rotation.y += 0.01;
-        littlecube.rotation.z += 0.01;
+        littlecube.rotation.x += 0.1;
         renderer.render(scene, camera);
         stats.end();
       };
@@ -115,26 +101,6 @@ export default {
   },
   components: {
     ImportModel,
-  },
-  setup() {
-    const modeladd = () => {
-      Snackbar({
-        content: "已加载",
-        type: "success",
-        duration: 500,
-      });
-    };
-    const modeldel = () => {
-      Snackbar({
-        content: "已删除",
-        type: "error",
-        duration: 500,
-      });
-    };
-    return {
-      modeladd,
-      modeldel,
-    };
   },
 };
 </script>
@@ -158,11 +124,6 @@ export default {
   justify-content: space-evenly;
   align-items: center;
 }
-.card-1 {
-  margin-top: 30px;
-  width: 80%;
-  line-height: 2px;
-}
 #right {
   display: flex;
   align-items: center;
@@ -170,6 +131,11 @@ export default {
   left: 25%;
   height: 100%;
   width: 75%;
+}
+#modelbox {
+  width: 750px;
+  height: 500px;
+  position: relative;
 }
 #three {
   width: 750px;
