@@ -18,10 +18,10 @@ export default {
     XRMain,
   },
   setup() {
-    let mswitcher = "日间";
-    let SunOrMoon = "fa-sun-o";
-    const value = ref(false);
-    let currentTheme;
+    let SunOrMoon = "fa-moon-o";
+    const value = ref(true);
+    let currentTheme = dark;
+    StyleProvider(currentTheme);
     const toggleTheme = () => {
       currentTheme = currentTheme ? null : dark;
       StyleProvider(currentTheme);
@@ -31,17 +31,14 @@ export default {
       Ripple,
       value,
       Switch,
-      mswitcher,
       SunOrMoon,
     };
   },
   methods: {
     swc() {
       if (this.value == true) {
-        this.mswitcher = "日间";
         this.SunOrMoon = "fa-sun-o";
       } else {
-        this.mswitcher = "夜间";
         this.SunOrMoon = "fa-moon-o";
       }
     },

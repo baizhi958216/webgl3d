@@ -24,6 +24,10 @@ import ImportModel from "./ImportModel.vue";
 import * as THREE from "three";
 import * as Stats from "stats.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { MMDLoader } from "three/examples/jsm/loaders/MMDLoader";
+// import { GUI } from "three/examples/jsm/libs/dat.gui.module";
+// import { OutlineEffect } from "three/examples/jsm/effects/OutlineEffect";
+// import { MMDAnimationHelper } from "three/examples/jsm/animation/MMDAnimationHelper";
 
 export default {
   name: "XRMain",
@@ -45,7 +49,7 @@ export default {
         0.1,
         1000
       );
-      camera.position.set(0, 0, 20);
+      camera.position.set(0, 300, 350);
       // 渲染器
       const renderer = new THREE.WebGLRenderer({
         canvas,
@@ -53,8 +57,21 @@ export default {
       });
       renderer.setSize(cWidth, cHeight);
       // 创建一个大盒子cube
-      const geometry = new THREE.BoxGeometry(800, 600, 800);
-      const littleGeometry = new THREE.IcosahedronGeometry(1, 60, 1);
+      const geometry = new THREE.BoxGeometry(120*5, 2, 100*5);
+      // 创建一个小球littleGeometry
+      // const littleGeometry = new THREE.IcosahedronGeometry(1, 60, 1);
+
+      // Instantiate a loader
+      const modelFile = "../assets/teriri.pmx";
+      const loader = new MMDLoader();
+      // let mesh,helper, ikHelper, physicsHelper;
+      let mesh
+      loader.load(modelFile, function (mmd) {
+        mesh = mmd.mesh;
+      //   mesh.position.y = -10;
+        scene.add(mesh);
+      });
+
       // 载入贴图
       const textureloader = new THREE.TextureLoader();
       const texture = textureloader.load(
@@ -64,19 +81,19 @@ export default {
         map: texture,
         side: THREE.DoubleSide,
       });
-      const textureloader2 = new THREE.TextureLoader();
-      const texture2 = textureloader2.load(
-        "https://uploadstatic.mihoyo.com/contentweb/20200410/2020041019014847737.png"
-      );
-      const material2 = new THREE.MeshBasicMaterial({
-        map: texture2,
-        side: THREE.DoubleSide,
-      });
-      const cube = new THREE.Mesh(geometry, material2);
-      const littlecube = new THREE.Mesh(littleGeometry, material);
+      // const textureloader2 = new THREE.TextureLoader();
+      // const texture2 = textureloader2.load(
+      //   "https://uploadstatic.mihoyo.com/contentweb/20200410/2020041019014847737.png"
+      // );
+      // const material2 = new THREE.MeshBasicMaterial({
+      //   map: texture2,
+      //   side: THREE.DoubleSide,
+      // });
+      const cube = new THREE.Mesh(geometry, material);
+      // const littlecube = new THREE.Mesh(littleGeometry, material);
       // 在场景加入创建的盒子cube
       scene.add(cube);
-      scene.add(littlecube);
+      // scene.add(littlecube);
       // FPS显示
       const stats = new Stats();
       stats.setMode(0);
@@ -87,7 +104,10 @@ export default {
       const animate = function () {
         stats.begin();
         requestAnimationFrame(animate);
-        littlecube.rotation.x += 0.1;
+        // littlecube.rotation.x += 0.1;
+        // cube.rotation.x += 0.001;
+        // cube.rotation.y -= 0.006;
+        // cube.rotation.z += 0.001;
         renderer.render(scene, camera);
         stats.end();
       };
@@ -117,6 +137,7 @@ export default {
   min-width: 136px;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 #lTop {
   display: flex;

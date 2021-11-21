@@ -29,7 +29,6 @@ export default {
 
 <style scoped>
 .mt-10 {
-  /* position: absolute; */
   width: 150px;
   height: 30px;
   margin-right: 3vh;
