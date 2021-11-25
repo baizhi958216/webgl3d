@@ -17,8 +17,8 @@
           <el-collapse v-model="activeNames" @change="handleChange" style="width:  220px">
             <el-collapse-item title="演示" name="1">
               <el-radio-group v-model="radio">
-                <el-radio :label="1">3D</el-radio>
-                <el-radio :label="2">2D</el-radio>
+                <el-radio :label="1">虚拟-现实</el-radio>
+                <el-radio :label="2">现实-虚拟</el-radio>
               </el-radio-group>
               <!-- <div>啥都没</div> -->
             </el-collapse-item>
@@ -81,6 +81,10 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { Open } from "@element-plus/icons";
 import { defineComponent, ref } from "vue";
 import { ElMessage } from "element-plus";
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
+import { RoughnessMipmapper } from 'three/examples/jsm/utils/RoughnessMipmapper';
+
 // import { ref } from 'vue'
 export default defineComponent({
   name: "App",
@@ -106,7 +110,7 @@ export default defineComponent({
     return {
       activeNames,
       openCenter,
-      radio: ref(1),
+      radio: ref(2),
       options: ref([
         {
           value: "Option1",
@@ -137,61 +141,64 @@ export default defineComponent({
         1000
       );
       camera.position.set(10, 10, 10);
+
+      // 背景贴图
+      const rgbeloader = new RGBELoader();
+      rgbeloader.setPath('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/equirectangular/')
+      rgbeloader.load('royal_esplanade_1k.hdr',function(texture){
+        texture.mapping = THREE.EquirectangularReflectionMapping;
+        scene.background = texture;
+						scene.environment = texture;
+
+						render();
+
+            const roughnessMipmapper = new RoughnessMipmapper( renderer );
+            // 导入GLTF模型
+						const loader = new GLTFLoader().setPath( 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/gltf/DamagedHelmet/glTF/' );
+						loader.load( 'DamagedHelmet.gltf', function ( gltf ) {
+
+							gltf.scene.traverse( function ( child ) {
+
+								if ( child.isMesh ) {
+
+									roughnessMipmapper.generateMipmaps( child.material );
+
+								}
+
+							} );
+
+							scene.add( gltf.scene );
+
+							roughnessMipmapper.dispose();
+
+							render();
+            });
+      });
       // 渲染器
       const renderer = new THREE.WebGLRenderer({
         canvas,
         antialias: true,
       });
       renderer.setSize(cWidth, cHeight);
-      // 创建一个大盒子cube
-      const geometry = new THREE.BoxGeometry(120 * 5, 100 * 5, 100 * 5);
-      // 创建一个小球littleGeometry
-      const littleGeometry = new THREE.IcosahedronGeometry(1, 60, 1);
 
-      // 载入贴图
-      const textureloader = new THREE.TextureLoader();
-      const texture = textureloader.load(
-        "https://uploadstatic.mihoyo.com/contentweb/20200410/2020041019014847737.png"
-      );
-      const material = new THREE.MeshBasicMaterial({
-        map: texture,
-        side: THREE.DoubleSide,
-      });
-      const textureloader2 = new THREE.TextureLoader();
-      const texture2 = textureloader2.load(
-        "https://uploadstatic.mihoyo.com/contentweb/20191114/2019111412090396621.png"
-      );
-      const material2 = new THREE.MeshBasicMaterial({
-        map: texture2,
-        side: THREE.DoubleSide,
-      });
-      const cube = new THREE.Mesh(geometry, material);
-      const littlecube = new THREE.Mesh(littleGeometry, material2);
-      // 在场景加入创建的盒子cube
-      scene.add(cube);
-      scene.add(littlecube);
       // FPS显示
       const stats = new Stats();
       stats.setMode(0);
       stats.domElement.style.opacity = "0.8";
       document.getElementById("modelbox").appendChild(stats.domElement);
       // 渲染场景
-      const animate = function () {
+      const render = function () {
         stats.begin();
-        requestAnimationFrame(animate);
-        // littlecube.rotation.x += 0.1;
-        // cube.rotation.x += 0.001;
-        // cube.rotation.y -= 0.001;
-        // cube.rotation.z += 0.001;
-        renderer.render(scene, camera);
+        renderer.render( scene, camera );
         stats.end();
       };
-      animate();
       // 监听鼠标事件
       const controls = new OrbitControls(camera, renderer.domElement);
-      controls.addEventListener("change", () => {
-        renderer.render(scene, camera);
-      });
+      controls.addEventListener( 'change', render );
+      controls.minDistance = 2;
+			controls.maxDistance = 10;
+			controls.target.set( 0, 0, - 0.2 );
+			controls.update();
     },
   },
 });
