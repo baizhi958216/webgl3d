@@ -144,8 +144,8 @@ export default defineComponent({
 
       // 背景贴图
       const rgbeloader = new RGBELoader();
-      rgbeloader.setPath('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/equirectangular/')
-      rgbeloader.load('royal_esplanade_1k.hdr',function(texture){
+      rgbeloader.setPath('https://raw.githubusercontent.com/baizhi958216/webgl3d/elementplus/src/assets/')
+      rgbeloader.load('colorful_studio_4k.hdr',function(texture){
         texture.mapping = THREE.EquirectangularReflectionMapping;
         scene.background = texture;
 						scene.environment = texture;
@@ -154,8 +154,8 @@ export default defineComponent({
 
             const roughnessMipmapper = new RoughnessMipmapper( renderer );
             // 导入GLTF模型
-						const loader = new GLTFLoader().setPath( 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/gltf/DamagedHelmet/glTF/' );
-						loader.load( 'DamagedHelmet.gltf', function ( gltf ) {
+						const loader = new GLTFLoader().setPath( 'https://raw.githubusercontent.com/baizhi958216/webgl3d/elementplus/src/assets/' );
+						loader.load( '321.gltf', function ( gltf ) {
 
 							gltf.scene.traverse( function ( child ) {
 
